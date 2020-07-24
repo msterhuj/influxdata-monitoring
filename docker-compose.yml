@@ -1,0 +1,45 @@
+version: "3.3"
+
+services:
+
+    # influx block https://www.influxdata.com/wp-content/uploads/InfluxData-Kapasitor.png
+
+    # prupose build time series database
+    influxdb:
+        image: influxdb
+        ports:
+            - 8086:8086 # http api
+            - 8089:8089 # udp api
+        # remove commant if you need to connect over this docker compose
+        #    - 8083:8083
+        volumes:
+            - ./config/influxdb.conf:/etc/influxdb/influxdb.conf
+            - ./data/influxdb:/var/lib/influxdb
+    
+    # complete interface for the influxdata platform
+    chronograf:
+        image: chronograf
+        depends_on:
+            - influxdb
+            - kapacitor
+        environment:
+            # all env option here
+            # https://docs.influxdata.com/chronograf/v1.8/administration/config-options/
+            - INFLUXDB_URL=http://influxdb:8086
+            - KAPACITOR_URL=http://kapacitor:9092
+        ports: 
+            - 8888:8888 # admin ui
+        volumes:
+            - ./data/chronograf:/var/lib/chronograf
+    
+    # real-time streaming data processing engine
+    kapacitor:
+        image: kapacitor
+        depends_on:
+            - influxdb
+        # remove commant if you need to connect over this docker compose
+        #ports: 
+        #    - 9092:9092
+        volumes:
+            - ./config/kapacitor.conf:/etc/kapacitor/kapacitor.conf
+            - ./data/kapacitor:/var/lib/kapacitor
