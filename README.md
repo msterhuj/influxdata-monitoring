@@ -2,7 +2,8 @@
 
 ## Content
 This docker compose file contains three services with influxdb v2 for stroring data, kapacitor for the alert system and chronograf for the management panel which communicates in the way described below.
-![uml](https://www.influxdata.com/wp-content/uploads/InfluxData-Kapasitor.png)
+| ![uml](https://www.influxdata.com/wp-content/uploads/InfluxData-Kapasitor.png) |
+|--|
 * Telegraf is not included but can be added manually
 
 ## Install & Start
